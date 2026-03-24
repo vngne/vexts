@@ -25,7 +25,6 @@ export default function RootLayout({
     <html lang="en" className={cn("font-sans", geist.variable)}>
       <body
         className={`${plusJakartaSans.className} ${plusJakartaSans.className} antialiased`}
-        suppressHydrationWarning
       >
       <ThemeProvider
           attribute="class"
