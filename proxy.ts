@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { server } from "@/lib/auth/server";
 import { headers } from "next/headers";
 
 const protectedRoutes = ["/dashboard"];
@@ -10,7 +10,7 @@ export async function proxy(request: NextRequest) {
   const isProtectedRoute = protectedRoutes.includes(path);
   const isPublicRoute = publicRoutes.includes(path);
 
-  const session = await auth.api.getSession({
+  const session = await server.api.getSession({
     headers: await headers(),
   });
 

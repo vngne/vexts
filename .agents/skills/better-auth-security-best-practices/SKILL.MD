@@ -1,6 +1,6 @@
 ---
-name: better-auth-security-best-practices
-description: Configure rate limiting, manage auth secrets, set up CSRF protection, define trusted origins, secure sessions and cookies, encrypt OAuth tokens, track IP addresses, and implement audit logging for Better Auth. Use when users need to secure their auth setup, prevent brute force attacks, or harden a Better Auth deployment.
+name: better-server-security-best-practices
+description: Configure rate limiting, manage server secrets, set up CSRF protection, define trusted origins, secure sessions and cookies, encrypt OAuth tokens, track IP addresses, and implement audit logging for Better Auth. Use when users need to secure their server setup, prevent brute force attacks, or harden a Better Auth deployment.
 ---
 
 ## Secret Management
@@ -8,9 +8,9 @@ description: Configure rate limiting, manage auth secrets, set up CSRF protectio
 ### Configuring the Secret
 
 ```ts
-import { betterAuth } from "better-auth";
+import { betterAuth } from "better-server";
 
-export const auth = betterAuth({
+export const server = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET, // or via `BETTER_AUTH_SECRET` env
 });
 ```
@@ -34,9 +34,9 @@ Enabled in production by default. Applies to all endpoints. Plugins can override
 ### Default Configuration
 
 ```ts
-import { betterAuth } from "better-auth";
+import { betterAuth } from "better-server";
 
-export const auth = betterAuth({
+export const server = betterAuth({
   rateLimit: {
     enabled: true, // Default: true in production
     window: 10, // Time window in seconds (default: 10)
@@ -79,11 +79,11 @@ Sensitive endpoints default to 3 requests per 10 seconds (`/sign-in`, `/sign-up`
 ```ts
 rateLimit: {
   customRules: {
-    "/api/auth/sign-in/email": {
+    "/api/server/sign-in/email": {
       window: 60, // 1 minute window
       max: 5, // 5 attempts
     },
-    "/api/auth/some-safe-endpoint": false, // Disable rate limiting
+    "/api/server/some-safe-endpoint": false, // Disable rate limiting
   },
 }
 ```
@@ -95,9 +95,9 @@ Multi-layer protection: origin header validation, Fetch Metadata checks, and fir
 ### Configuration
 
 ```ts
-import { betterAuth } from "better-auth";
+import { betterAuth } from "better-server";
 
-export const auth = betterAuth({
+export const server = betterAuth({
   advanced: {
     disableCSRFCheck: false, // Default: false (keep enabled)
   },
@@ -111,9 +111,9 @@ Only disable for testing or with an alternative CSRF mechanism.
 ### Configuring Trusted Origins
 
 ```ts
-import { betterAuth } from "better-auth";
+import { betterAuth } from "better-server";
 
-export const auth = betterAuth({
+export const server = betterAuth({
   baseURL: "https://api.example.com",
   trustedOrigins: [
     "https://app.example.com",
@@ -153,9 +153,9 @@ Validates `callbackURL`, `redirectTo`, `errorCallbackURL`, `newUserCallbackURL`,
 ### Session Expiration
 
 ```ts
-import { betterAuth } from "better-auth";
+import { betterAuth } from "better-server";
 
-export const auth = betterAuth({
+export const server = betterAuth({
   session: {
     expiresIn: 60 * 60 * 24 * 7, // 7 days (default)
     updateAge: 60 * 60 * 24, // Refresh session every 24 hours (default)
@@ -186,15 +186,15 @@ Defaults: `secure: true` (HTTPS/production), `sameSite: "lax"`, `httpOnly: true`
 ### Custom Cookie Configuration
 
 ```ts
-import { betterAuth } from "better-auth";
+import { betterAuth } from "better-server";
 
-export const auth = betterAuth({
+export const server = betterAuth({
   advanced: {
     useSecureCookies: true, // Force secure cookies
-    cookiePrefix: "myapp", // Custom prefix (default: "better-auth")
+    cookiePrefix: "myapp", // Custom prefix (default: "better-server")
     defaultCookieAttributes: {
       sameSite: "strict", // Stricter CSRF protection
-      path: "/auth", // Limit cookie scope
+      path: "/server", // Limit cookie scope
     },
   },
 });
@@ -221,9 +221,9 @@ PKCE is automatic for all OAuth flows. State tokens are 32-char random strings e
 ### State Parameter Storage
 
 ```ts
-import { betterAuth } from "better-auth";
+import { betterAuth } from "better-server";
 
-export const auth = betterAuth({
+export const server = betterAuth({
   account: {
     storeStateStrategy: "cookie", // Options: "cookie" (default), "database"
   },
@@ -245,9 +245,9 @@ Enable if storing OAuth tokens for API access on behalf of users. Use `skipState
 ### IP Address Configuration
 
 ```ts
-import { betterAuth } from "better-auth";
+import { betterAuth } from "better-server";
 
-export const auth = betterAuth({
+export const server = betterAuth({
   advanced: {
     ipAddress: {
       ipAddressHeaders: ["x-forwarded-for", "x-real-ip"], // Headers to check
@@ -262,9 +262,9 @@ Set `ipv6Subnet` (128, 64, 48, 32; default 64) to group IPv6 addresses. Enable `
 ## Database Hooks for Security Auditing
 
 ```ts
-import { betterAuth } from "better-auth";
+import { betterAuth } from "better-server";
 
-export const auth = betterAuth({
+export const server = betterAuth({
   databaseHooks: {
     session: {
       create: {
@@ -314,9 +314,9 @@ Return `false` from a `before` hook to prevent an operation.
 ## Background Tasks
 
 ```ts
-import { betterAuth } from "better-auth";
+import { betterAuth } from "better-server";
 
-export const auth = betterAuth({
+export const server = betterAuth({
   advanced: {
     backgroundTasks: {
       handler: (promise) => {
@@ -339,9 +339,9 @@ Built-in: consistent response messages, dummy operations on invalid requests, ba
 ## Complete Security Configuration Example
 
 ```ts
-import { betterAuth } from "better-auth";
+import { betterAuth } from "better-server";
 
-export const auth = betterAuth({
+export const server = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET,
   baseURL: "https://api.example.com",
   trustedOrigins: [
@@ -354,8 +354,8 @@ export const auth = betterAuth({
     enabled: true,
     storage: "secondary-storage",
     customRules: {
-      "/api/auth/sign-in/email": { window: 60, max: 5 },
-      "/api/auth/sign-up/email": { window: 60, max: 3 },
+      "/api/server/sign-in/email": { window: 60, max: 5 },
+      "/api/server/sign-up/email": { window: 60, max: 3 },
     },
   },
   

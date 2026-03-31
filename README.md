@@ -5,8 +5,8 @@
 First, run the development server:
 
 ```bash
-git clone https://github.com/ekovegeance/better-auth-nexts.git
-cd better-auth-nexts
+git clone https://github.com/ekovegeance/better-server-nexts.git
+cd better-server-nexts
 pnpm install
 ```
 

@@ -16,7 +16,7 @@ import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
-import {authClient, useSession} from "@/lib/auth-client";
+import {client, useSession} from "@/lib/auth/client";
 import React, {useState} from "react";
 import {toast} from "sonner";
 import {CircleAlert, Loader2} from "lucide-react";
@@ -46,7 +46,7 @@ export function EditUserDialog() {
     });
 
     async function onSubmit(values: z.infer<typeof editUserSchema>) {
-        await authClient.updateUser({
+        await client.updateUser({
             name: values.name,
         }, {
             onRequest: () => {

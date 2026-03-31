@@ -58,7 +58,7 @@ See [functions.md](./functions.md) for:
 See [error-handling.md](./error-handling.md) for:
 - `error.tsx`, `global-error.tsx`, `not-found.tsx`
 - `redirect`, `permanentRedirect`, `notFound`
-- `forbidden`, `unauthorized` (auth errors)
+- `forbidden`, `unauthorized` (server errors)
 - `unstable_rethrow` for catch blocks
 
 ## Data Patterns

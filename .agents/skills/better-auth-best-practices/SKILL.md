@@ -1,22 +1,22 @@
 ---
-name: better-auth-best-practices
-description: Configure Better Auth server and client, set up database adapters, manage sessions, add plugins, and handle environment variables. Use when users mention Better Auth, betterauth, auth.ts, or need to set up TypeScript authentication with email/password, OAuth, or plugin configuration.
+name: better-server-best-practices
+description: Configure Better Auth server and client, set up database adapters, manage sessions, add plugins, and handle environment variables. Use when users mention Better Auth, betterauth, server.ts, or need to set up TypeScript authentication with email/password, OAuth, or plugin configuration.
 ---
 
 # Better Auth Integration Guide
 
-**Always consult [better-auth.com/docs](https://better-auth.com/docs) for code examples and latest API.**
+**Always consult [better-server.com/docs](https://better-auth.com/docs) for code examples and latest API.**
 
 ---
 
 ## Setup Workflow
 
-1. Install: `npm install better-auth`
+1. Install: `npm install better-server`
 2. Set env vars: `BETTER_AUTH_SECRET` and `BETTER_AUTH_URL`
-3. Create `auth.ts` with database + config
+3. Create `server.ts` with database + config
 4. Create route handler for your framework
-5. Run `npx @better-auth/cli@latest migrate`
-6. Verify: call `GET /api/auth/ok` — should return `{ status: "ok" }`
+5. Run `npx @better-server/cli@latest migrate`
+6. Verify: call `GET /api/server/ok` — should return `{ status: "ok" }`
 
 ---
 
@@ -29,12 +29,12 @@ description: Configure Better Auth server and client, set up database adapters, 
 Only define `baseURL`/`secret` in config if env vars are NOT set.
 
 ### File Location
-CLI looks for `auth.ts` in: `./`, `./lib`, `./utils`, or under `./src`. Use `--config` for custom path.
+CLI looks for `server.ts` in: `./`, `./lib`, `./utils`, or under `./src`. Use `--config` for custom path.
 
 ### CLI Commands
-- `npx @better-auth/cli@latest migrate` - Apply schema (built-in adapter)
-- `npx @better-auth/cli@latest generate` - Generate schema for Prisma/Drizzle
-- `npx @better-auth/cli mcp --cursor` - Add MCP to AI tools
+- `npx @better-server/cli@latest migrate` - Apply schema (built-in adapter)
+- `npx @better-server/cli@latest generate` - Generate schema for Prisma/Drizzle
+- `npx @better-server/cli mcp --cursor` - Add MCP to AI tools
 
 **Re-run after adding/changing plugins.**
 
@@ -46,7 +46,7 @@ CLI looks for `auth.ts` in: `./`, `./lib`, `./utils`, or under `./src`. Use `--c
 |--------|-------|
 | `appName` | Optional display name |
 | `baseURL` | Only if `BETTER_AUTH_URL` not set |
-| `basePath` | Default `/api/auth`. Set `/` for root. |
+| `basePath` | Default `/api/server`. Set `/` for root. |
 | `secret` | Only if `BETTER_AUTH_SECRET` not set |
 | `database` | Required for most features. See adapters docs. |
 | `secondaryStorage` | Redis/KV for sessions & rate limits |
@@ -61,7 +61,7 @@ CLI looks for `auth.ts` in: `./`, `./lib`, `./utils`, or under `./src`. Use `--c
 
 **Direct connections:** Pass `pg.Pool`, `mysql2` pool, `better-sqlite3`, or `bun:sqlite` instance.
 
-**ORM adapters:** Import from `better-auth/adapters/drizzle`, `better-auth/adapters/prisma`, `better-auth/adapters/mongodb`.
+**ORM adapters:** Import from `better-server/adapters/drizzle`, `better-server/adapters/prisma`, `better-server/adapters/mongodb`.
 
 **Critical:** Better Auth uses adapter model names, NOT underlying table names. If Prisma model is `User` mapping to table `users`, use `modelName: "user"` (Prisma reference), not `"users"`.
 
@@ -129,9 +129,9 @@ CLI looks for `auth.ts` in: `./`, `./lib`, `./utils`, or under `./src`. Use `--c
 
 **Import from dedicated paths for tree-shaking:**
 ```
-import { twoFactor } from "better-auth/plugins/two-factor"
+import { twoFactor } from "better-server/plugins/two-factor"
 ```
-NOT `from "better-auth/plugins"`.
+NOT `from "better-server/plugins"`.
 
 **Popular plugins:** `twoFactor`, `organization`, `passkey`, `magicLink`, `emailOtp`, `username`, `phoneNumber`, `admin`, `apiKey`, `bearer`, `jwt`, `multiSession`, `sso`, `oauthProvider`, `oidcProvider`, `openAPI`, `genericOAuth`.
 
@@ -141,7 +141,7 @@ Client plugins go in `createAuthClient({ plugins: [...] })`.
 
 ## Client
 
-Import from: `better-auth/client` (vanilla), `better-auth/react`, `better-auth/vue`, `better-auth/svelte`, `better-auth/solid`.
+Import from: `better-server/client` (vanilla), `better-server/react`, `better-server/vue`, `better-server/svelte`, `better-server/solid`.
 
 Key methods: `signUp.email()`, `signIn.email()`, `signIn.social()`, `signOut()`, `useSession()`, `getSession()`, `revokeSession()`, `revokeSessions()`.
 
@@ -149,9 +149,9 @@ Key methods: `signUp.email()`, `signIn.email()`, `signIn.social()`, `signOut()`,
 
 ## Type Safety
 
-Infer types: `typeof auth.$Infer.Session`, `typeof auth.$Infer.Session.user`.
+Infer types: `typeof server.$Infer.Session`, `typeof server.$Infer.Session.user`.
 
-For separate client/server projects: `createAuthClient<typeof auth>()`.
+For separate client/server projects: `createAuthClient<typeof server>()`.
 
 ---
 

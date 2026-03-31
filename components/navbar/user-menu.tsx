@@ -24,7 +24,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import {authClient} from "@/lib/auth-client";
+import {client} from "@/lib/auth/client";
 import {useRouter} from "next/navigation"
 import {User} from "better-auth";
 
@@ -34,7 +34,7 @@ export default function UserMenu({user}: { user: User }) {
     // Function to handle logout
     const router = useRouter();
     async function handleLogout() {
-        await authClient.signOut({
+        await client.signOut({
             fetchOptions: {
                 onSuccess: () => {
                     router.push("/signin");

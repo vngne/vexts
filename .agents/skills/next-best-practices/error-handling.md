@@ -143,7 +143,7 @@ permanentRedirect('/new-url')
 
 ## Auth Errors
 
-Trigger auth-related error pages:
+Trigger server-related error pages:
 
 ```tsx
 import { forbidden, unauthorized } from 'next/navigation'

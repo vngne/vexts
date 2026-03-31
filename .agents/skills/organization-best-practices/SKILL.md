@@ -7,14 +7,14 @@ description: Configure multi-tenant organizations, manage members and invitation
 
 1. Add `organization()` plugin to server config
 2. Add `organizationClient()` plugin to client config
-3. Run `npx @better-auth/cli migrate`
+3. Run `npx @better-server/cli migrate`
 4. Verify: check that organization, member, invitation tables exist in your database
 
 ```ts
-import { betterAuth } from "better-auth";
-import { organization } from "better-auth/plugins";
+import { betterAuth } from "better-server";
+import { organization } from "better-server/plugins";
 
-export const auth = betterAuth({
+export const server = betterAuth({
   plugins: [
     organization({
       allowUserToCreateOrganization: true,
@@ -28,10 +28,10 @@ export const auth = betterAuth({
 ### Client-Side Setup
 
 ```ts
-import { createAuthClient } from "better-auth/client";
-import { organizationClient } from "better-auth/client/plugins";
+import { createAuthClient } from "better-server/client";
+import { organizationClient } from "better-server/client/plugins";
 
-export const authClient = createAuthClient({
+export const client = createAuthClient({
   plugins: [organizationClient()],
 });
 ```
@@ -42,7 +42,7 @@ The creator is automatically assigned the `owner` role.
 
 ```ts
 const createOrg = async () => {
-  const { data, error } = await authClient.organization.create({
+  const { data, error } = await client.organization.create({
     name: "My Company",
     slug: "my-company",
     logo: "https://example.com/logo.png",
@@ -72,7 +72,7 @@ organization({
 Administrators can create organizations for other users (server-side only):
 
 ```ts
-await auth.api.createOrganization({
+await server.api.createOrganization({
   body: {
     name: "Client Organization",
     slug: "client-org",
@@ -90,7 +90,7 @@ Stored in the session and scopes subsequent API calls. Set after user selects on
 
 ```ts
 const setActive = async (organizationId: string) => {
-  const { data, error } = await authClient.organization.setActive({
+  const { data, error } = await client.organization.setActive({
     organizationId,
   });
 };
@@ -105,7 +105,7 @@ Use `getFullOrganization()` to retrieve the active org with all members, invitat
 ### Adding Members (Server-Side)
 
 ```ts
-await auth.api.addMember({
+await server.api.addMember({
   body: {
     userId: "user-id",
     role: "member",
@@ -119,7 +119,7 @@ For client-side member additions, use the invitation system instead.
 ### Assigning Multiple Roles
 
 ```ts
-await auth.api.addMember({
+await server.api.addMember({
   body: {
     userId: "user-id",
     role: ["admin", "moderator"],
@@ -154,11 +154,11 @@ organization({
 ### Setting Up Invitation Emails
 
 ```ts
-import { betterAuth } from "better-auth";
-import { organization } from "better-auth/plugins";
+import { betterAuth } from "better-server";
+import { organization } from "better-server/plugins";
 import { sendEmail } from "./email";
 
-export const auth = betterAuth({
+export const server = betterAuth({
   plugins: [
     organization({
       sendInvitationEmail: async (data) => {
@@ -183,7 +183,7 @@ export const auth = betterAuth({
 ### Sending Invitations
 
 ```ts
-await authClient.organization.inviteMember({
+await client.organization.inviteMember({
   email: "newuser@example.com",
   role: "member",
 });
@@ -192,7 +192,7 @@ await authClient.organization.inviteMember({
 ### Shareable Invitation URLs
 
 ```ts
-const { data } = await authClient.organization.getInvitationURL({
+const { data } = await client.organization.getInvitationURL({
   email: "newuser@example.com",
   role: "member",
   callbackURL: "https://yourapp.com/dashboard",
@@ -220,7 +220,7 @@ Default roles: `owner` (full access), `admin` (manage members/invitations/settin
 ### Checking Permissions
 
 ```ts
-const { data } = await authClient.organization.hasPermission({
+const { data } = await client.organization.hasPermission({
   permission: "member:write",
 });
 
@@ -236,9 +236,9 @@ Use `checkRolePermission({ role, permissions })` for client-side UI rendering (s
 ### Enabling Teams
 
 ```ts
-import { organization } from "better-auth/plugins";
+import { organization } from "better-server/plugins";
 
-export const auth = betterAuth({
+export const server = betterAuth({
   plugins: [
     organization({
         teams: {
@@ -252,7 +252,7 @@ export const auth = betterAuth({
 ### Creating Teams
 
 ```ts
-const { data } = await authClient.organization.createTeam({
+const { data } = await client.organization.createTeam({
   name: "Engineering",
 });
 ```
@@ -280,10 +280,10 @@ organization({
 ### Enabling Dynamic Access Control
 
 ```ts
-import { organization } from "better-auth/plugins";
-import { dynamicAccessControl } from "@better-auth/organization/addons";
+import { organization } from "better-server/plugins";
+import { dynamicAccessControl } from "@better-server/organization/addons";
 
-export const auth = betterAuth({
+export const server = betterAuth({
   plugins: [
     organization({
         dynamicAccessControl: {
@@ -297,7 +297,7 @@ export const auth = betterAuth({
 ### Creating Custom Roles
 
 ```ts
-await authClient.organization.createRole({
+await client.organization.createRole({
   role: "moderator",
   permission: {
     member: ["read"],
@@ -395,7 +395,7 @@ Always ensure ownership transfer before removing the current owner:
 
 ```ts
 // Transfer ownership first
-await authClient.organization.updateMemberRole({
+await client.organization.updateMemberRole({
   memberId: "new-owner-member-id",
   role: "owner",
 });
@@ -438,11 +438,11 @@ organization({
 ## Complete Configuration Example
 
 ```ts
-import { betterAuth } from "better-auth";
-import { organization } from "better-auth/plugins";
+import { betterAuth } from "better-server";
+import { organization } from "better-server/plugins";
 import { sendEmail } from "./email";
 
-export const auth = betterAuth({
+export const server = betterAuth({
   plugins: [
     organization({
       // Organization limits

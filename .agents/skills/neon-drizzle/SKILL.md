@@ -41,7 +41,7 @@ Tell me what you're building - I'll handle the rest:
 
 - "Setup Drizzle for my Next.js blog on Vercel" → Auto-detects Vercel + Next.js → HTTP adapter
 - "Add Drizzle to my Express API" → Auto-detects Node.js server → WebSocket adapter
-- "Create a users table with auth fields" → Loads schema guide → Generates schema
+- "Create a users table with server fields" → Loads schema guide → Generates schema
 
 ## Reference Documentation
 
@@ -60,8 +60,8 @@ For deeper technical details (loaded on-demand):
 
 ## Related Skills
 
-- **neon-auth** - Add authentication
-- **neon-js** - Full SDK with auth + PostgREST-style data API
+- **neon-server** - Add authentication
+- **neon-js** - Full SDK with server + PostgREST-style data API
 - **neon-serverless** - Connection setup without ORM
 - **neon-toolkit** - Ephemeral databases for testing
 - **add-neon-docs** - Add Neon best practices to your project (run after setup)

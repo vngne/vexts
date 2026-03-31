@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { authClient } from "@/lib/auth-client"; //import the auth client
+import { client } from "@/lib/auth/client"; //import the auth client
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CircleAlert, Loader2 } from "lucide-react";
@@ -44,7 +44,7 @@ export function SignUpForm({ className, ...props }: ComponentProps<"form">) {
 
   async function onSubmit(values: z.infer<typeof signUpSchema>) {
     // Handle form submission logic here
-    const { data, error } = await authClient.signUp.email(
+    const { data, error } = await client.signUp.email(
       {
         name: values.name,
         email: values.email,

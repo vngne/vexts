@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import React, { ReactNode } from "react";
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils";
+import { env } from "@/lib/env";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -14,7 +15,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Better Auth Example",
+  title: env.NEXT_PUBLIC_APP_NAME,
   description: "An example application using Better Auth",
 };
 

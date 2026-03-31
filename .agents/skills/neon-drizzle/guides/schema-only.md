@@ -24,7 +24,7 @@ Guide for creating or modifying database schemas with Drizzle.
 When following this guide, I will track these high-level tasks:
 
 - [ ] Design schema using appropriate patterns (tables, relationships, types)
-- [ ] Apply common schema patterns (auth, soft deletes, enums, JSON)
+- [ ] Apply common schema patterns (server, soft deletes, enums, JSON)
 - [ ] Implement schema modifications (add/rename/drop columns, change types)
 - [ ] Add indexes and constraints for performance and data integrity
 - [ ] Generate and apply migrations

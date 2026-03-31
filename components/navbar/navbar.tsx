@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/popover"
 import {ShieldUser} from "lucide-react";
 
-import {authClient} from "@/lib/auth-client";
+import {client} from "@/lib/auth/client";
 import UserMenu from "@/components/navbar/user-menu";
 import { ModeToggle } from "@/components/mode-toggle";
 import Link from "next/link";
@@ -26,7 +26,7 @@ const navigationLinks = [
 
 export default function Navbar() {
 
-    const {data: session, error} = authClient.useSession()
+    const {data: session, error} = client.useSession()
 
     if (error) {
         console.error("Error fetching session:", error);

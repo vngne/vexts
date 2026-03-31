@@ -7,14 +7,14 @@ description: Configure TOTP authenticator apps, send OTP codes via email/SMS, ma
 
 1. Add `twoFactor()` plugin to server config with `issuer`
 2. Add `twoFactorClient()` plugin to client config
-3. Run `npx @better-auth/cli migrate`
+3. Run `npx @better-server/cli migrate`
 4. Verify: check that `twoFactorSecret` column exists on user table
 
 ```ts
-import { betterAuth } from "better-auth";
-import { twoFactor } from "better-auth/plugins";
+import { betterAuth } from "better-server";
+import { twoFactor } from "better-server/plugins";
 
-export const auth = betterAuth({
+export const server = betterAuth({
   appName: "My App",
   plugins: [
     twoFactor({
@@ -27,10 +27,10 @@ export const auth = betterAuth({
 ### Client-Side Setup
 
 ```ts
-import { createAuthClient } from "better-auth/client";
-import { twoFactorClient } from "better-auth/client/plugins";
+import { createAuthClient } from "better-server/client";
+import { twoFactorClient } from "better-server/client/plugins";
 
-export const authClient = createAuthClient({
+export const client = createAuthClient({
   plugins: [
     twoFactorClient({
       onTwoFactorRedirect() {
@@ -47,7 +47,7 @@ Requires password verification. Returns TOTP URI (for QR code) and backup codes.
 
 ```ts
 const enable2FA = async (password: string) => {
-  const { data, error } = await authClient.twoFactor.enable({
+  const { data, error } = await client.twoFactor.enable({
     password,
   });
 
@@ -78,7 +78,7 @@ Accepts codes from one period before/after current time:
 
 ```ts
 const verifyTotp = async (code: string) => {
-  const { data, error } = await authClient.twoFactor.verifyTotp({
+  const { data, error } = await client.twoFactor.verifyTotp({
     code,
     trustDevice: true,
   });
@@ -101,11 +101,11 @@ twoFactor({
 ### Configuring OTP Delivery
 
 ```ts
-import { betterAuth } from "better-auth";
-import { twoFactor } from "better-auth/plugins";
+import { betterAuth } from "better-server";
+import { twoFactor } from "better-server/plugins";
 import { sendEmail } from "./email";
 
-export const auth = betterAuth({
+export const server = betterAuth({
   plugins: [
     twoFactor({
       otpOptions: {
@@ -127,7 +127,7 @@ export const auth = betterAuth({
 
 ### Sending and Verifying OTP
 
-Send: `authClient.twoFactor.sendOtp()`. Verify: `authClient.twoFactor.verifyOtp({ code, trustDevice: true })`.
+Send: `client.twoFactor.sendOtp()`. Verify: `client.twoFactor.verifyOtp({ code, trustDevice: true })`.
 
 ### OTP Storage Security
 
@@ -181,7 +181,7 @@ Invalidates all previous codes:
 
 ```ts
 const regenerateBackupCodes = async (password: string) => {
-  const { data, error } = await authClient.twoFactor.generateBackupCodes({
+  const { data, error } = await client.twoFactor.generateBackupCodes({
     password,
   });
   // data.backupCodes contains the new codes
@@ -192,7 +192,7 @@ const regenerateBackupCodes = async (password: string) => {
 
 ```ts
 const verifyBackupCode = async (code: string) => {
-  const { data, error } = await authClient.twoFactor.verifyBackupCode({
+  const { data, error } = await client.twoFactor.verifyBackupCode({
     code,
     trustDevice: true,
   });
@@ -225,7 +225,7 @@ Response includes `twoFactorRedirect: true` when 2FA is required:
 
 ```ts
 const signIn = async (email: string, password: string) => {
-  const { data, error } = await authClient.signIn.email(
+  const { data, error } = await client.signIn.email(
     { email, password },
     {
       onSuccess(context) {
@@ -238,7 +238,7 @@ const signIn = async (email: string, password: string) => {
 };
 ```
 
-Server-side: check `"twoFactorRedirect" in response` when using `auth.api.signInEmail`.
+Server-side: check `"twoFactorRedirect" in response` when using `server.api.signInEmail`.
 
 ## Trusted Devices
 
@@ -270,7 +270,7 @@ twoFactor({
 
 ### Encryption at Rest
 
-TOTP secrets: encrypted with auth secret. Backup codes: encrypted by default. OTP: configurable (`"plain"`, `"encrypted"`, `"hashed"`). Uses constant-time comparison for verification.
+TOTP secrets: encrypted with server secret. Backup codes: encrypted by default. OTP: configurable (`"plain"`, `"encrypted"`, `"hashed"`). Uses constant-time comparison for verification.
 
 2FA can only be enabled for credential (email/password) accounts.
 
@@ -280,7 +280,7 @@ Requires password confirmation. Revokes trusted device records:
 
 ```ts
 const disable2FA = async (password: string) => {
-  const { data, error } = await authClient.twoFactor.disable({
+  const { data, error } = await client.twoFactor.disable({
     password,
   });
 };
@@ -289,11 +289,11 @@ const disable2FA = async (password: string) => {
 ## Complete Configuration Example
 
 ```ts
-import { betterAuth } from "better-auth";
-import { twoFactor } from "better-auth/plugins";
+import { betterAuth } from "better-server";
+import { twoFactor } from "better-server/plugins";
 import { sendEmail } from "./email";
 
-export const auth = betterAuth({
+export const server = betterAuth({
   appName: "My App",
   plugins: [
     twoFactor({

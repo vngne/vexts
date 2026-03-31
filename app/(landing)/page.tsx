@@ -1,15 +1,15 @@
 import React from 'react';
-import {auth} from "@/lib/auth";
+import {server} from "@/lib/auth/server";
 import {headers} from "next/headers";
 import UserCard from "@/components/landing/user-card";
 
 export default async function LandingPage() {
-    const session = await auth.api.getSession({
+    const session = await server.api.getSession({
         headers: await headers()
     });
 
     const activeSessions = session 
-        ? await auth.api.listSessions({
+        ? await server.api.listSessions({
             headers: await headers()
           })
         : [];
